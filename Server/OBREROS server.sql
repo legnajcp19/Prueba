@@ -1,25 +1,22 @@
---Juan Angel Calvillo
--- BAse Oracle 
-
-DROP TABLE OBRA CASCADE CONSTRAINTS;
-DROP TABLE MAQUINA CASCADE CONSTRAINTS;
-DROP TABLE OBRERO CASCADE CONSTRAINTS;
-DROP TABLE CLASIFICACION CASCADE CONSTRAINTS;
-DROP TABLE ESTADOS CASCADE CONSTRAINTS;
+CREATE DATABASE OBREROS;
+GO
+USE OBREROS;
+GO
+set dateformat dmy;
 
 CREATE TABLE ESTADOS(
-ID_EDO NUMBER(2)  PRIMARY KEY,
+ID_EDO NUMERIC(2)  PRIMARY KEY,
 LUGAR_NAC VARCHAR (31)
 );
 
 CREATE TABLE CLASIFICACION (
-ID_CLASIFICACION NUMBER(2) PRIMARY KEY,
+ID_CLASIFICACION NUMERIC(2) PRIMARY KEY,
 TIPO VARCHAR(1),
-SUELDO NUMBER(8,2)
+SUELDO NUMERIC(8,2)
 );
 
 CREATE TABLE OBRA (
-ID_OBRA NUMBER(3),
+ID_OBRA NUMERIC(3) NOT NULL,
 NOMBRE VARCHAR(15),
 ESTADO VARCHAR(15)
 );
@@ -28,7 +25,7 @@ ALTER TABLE OBRA ADD CONSTRAINT PK_OBRA
 PRIMARY KEY (ID_OBRA);
 
 CREATE TABLE MAQUINA (
-ID_MAQUINA NUMBER(3),
+ID_MAQUINA NUMERIC(3) NOT NULL,
 NOMBRE VARCHAR(15),
 TIPO VARCHAR(10)
 );
@@ -37,14 +34,14 @@ ALTER TABLE MAQUINA ADD CONSTRAINT PK_MAQUINA
 PRIMARY KEY (ID_MAQUINA);
 
 CREATE TABLE OBRERO (
-ID_OBRERO NUMBER(3),
+ID_OBRERO NUMERIC(3) NOT NULL,
 NOMBRE VARCHAR(20),
 APELLIDO VARCHAR(20),
-ID_CLASIFICACION NUMBER(2),
-ID_MAQUINA NUMBER(3),
-ID_OBRA NUMBER(3),
-FECHA_INGRESO DATE,
-ID_EDO NUMBER(2)
+ID_CLASIFICACION NUMERIC(2),
+ID_MAQUINA NUMERIC(3),
+ID_OBRA NUMERIC(3),
+FECHA_INGRESO datetime,
+ID_EDO NUMERIC(2)
 );
 
 ALTER TABLE OBRERO ADD CONSTRAINT PK_OBRERO
@@ -63,6 +60,21 @@ FOREIGN KEY (ID_EDO) REFERENCES ESTADOS(ID_EDO);
 ALTER TABLE OBRERO ADD CONSTRAINT FK_OBRERO_CLASIFICACION
 FOREIGN KEY (ID_CLASIFICACION) REFERENCES CLASIFICACION (ID_CLASIFICACION);
 
+CREATE TABLE NOMINA(
+NO_RECIBO NUMERIC(6) PRIMARY KEY,
+ID_OBRERO NUMERIC(3),
+ID_CLASIFICACION NUMERIC(2),
+N_SEM NUMERIC(3),
+CANT_HORA NUMERIC(2),
+TOTAL NUMERIC(8)
+);
+
+ALTER TABLE NOMINA ADD CONSTRAINT FK_NOM_CLAS 
+FOREIGN KEY (ID_CLASIFICACION) REFERENCES CLASIFICACION(ID_CLASIFICACION);
+
+ALTER TABLE NOMINA ADD CONSTRAINT FK_NOM_OBRE
+FOREIGN KEY (ID_OBRERO) REFERENCES OBRERO(ID_OBRERO);
+
 
 INSERT INTO ESTADOS VALUES (1,'CDMX');
 INSERT INTO ESTADOS VALUES (2,'AGUASCALIENTES');
@@ -78,23 +90,23 @@ INSERT INTO ESTADOS VALUES (11,'GUANAJUATO');
 INSERT INTO ESTADOS VALUES (12,'GUERRERO');
 INSERT INTO ESTADOS VALUES (13,'ESTADO DE HIDALGO');
 INSERT INTO ESTADOS VALUES (14,'JALISCO');
-INSERT INTO ESTADOS VALUES (15,'ESTADO DE MÉXICO');
-INSERT INTO ESTADOS VALUES (16,'MICHOACÁN DE OCAMPO');
+INSERT INTO ESTADOS VALUES (15,'ESTADO DE M XICO');
+INSERT INTO ESTADOS VALUES (16,'MICHOAC N DE OCAMPO');
 INSERT INTO ESTADOS VALUES (17,'MORELOS');
 INSERT INTO ESTADOS VALUES (18,'NAYARIT');
-INSERT INTO ESTADOS VALUES (19,'NUEVO LEÓN');
+INSERT INTO ESTADOS VALUES (19,'NUEVO LE N');
 INSERT INTO ESTADOS VALUES (20,'OAXACA');
 INSERT INTO ESTADOS VALUES (21,'PUEBLA');
-INSERT INTO ESTADOS VALUES (22,'QUERÉTARO');
+INSERT INTO ESTADOS VALUES (22,'QUER TARO');
 INSERT INTO ESTADOS VALUES (23,'QUINTANA ROO');
-INSERT INTO ESTADOS VALUES (24,'SAN LUIS POTOSÍ');
+INSERT INTO ESTADOS VALUES (24,'SAN LUIS POTOS ');
 INSERT INTO ESTADOS VALUES (25,'SINALOA');
 INSERT INTO ESTADOS VALUES (26,'SONORA');
 INSERT INTO ESTADOS VALUES (27,'TABASCO');
 INSERT INTO ESTADOS VALUES (28,'TAMAULIPAS');
 INSERT INTO ESTADOS VALUES (29,'TLAXCALA');
 INSERT INTO ESTADOS VALUES (30,'VERACRUZ DE IGNACIO DE LA LLAVE');
-INSERT INTO ESTADOS VALUES (31,'YUCATÁN');
+INSERT INTO ESTADOS VALUES (31,'YUCAT N');
 INSERT INTO ESTADOS VALUES (32,'ZACATECAS');
 
 INSERT INTO CLASIFICACION VALUES (1,'A',5000.10);
@@ -134,7 +146,7 @@ INSERT INTO OBRERO VALUES (7,'Maria','Dolores',1,4,4,'23/6/2020',7);
 INSERT INTO OBRERO VALUES (8,'Enrique','Martinez',1,4,NULL,'25/4/2021',28);
 INSERT INTO OBRERO VALUES (9,'Pablo','Quintana',1,2,NULL,'3/4/2020',29);
 INSERT INTO OBRERO VALUES (10,'Lucia','Gutierrez',1,5,1,'3/10/2020',27);
-INSERT INTO OBRERO VALUES (11,'Monica','Peña',1,NULL,1,'1/7/2021',22);
+INSERT INTO OBRERO VALUES (11,'Monica','Pe a',1,NULL,1,'1/7/2021',22);
 INSERT INTO OBRERO VALUES (12,'Victor','Suarez',1,6,4,'3/8/2020',29);
 INSERT INTO OBRERO VALUES (13,'Sergio','Raigoza',1,6,1,'1/7/2020',13);
 INSERT INTO OBRERO VALUES (14,'Juan','Lopez',1,4,1,'15/1/2020',1);
@@ -175,22 +187,94 @@ INSERT INTO OBRERO VALUES (48,'Mario','Garcia',3,3,2,'27/9/2020',27);
 INSERT INTO OBRERO VALUES (49,'Juvenal','Garcia',3,NULL,NULL,'19/2/2020',6);
 INSERT INTO OBRERO VALUES (50,'Francisco','Serrano',1,5,NULL,'15/10/2020',28);
 
+insert into nomina values(1,1,1,1,58,NULL);
+insert into nomina values(2,2,2,1,54,NULL);
+insert into nomina values(3,3,1,1,55,NULL);
+insert into nomina values(4,4,1,1,51,NULL);
+insert into nomina values(5,5,1,1,54,NULL);
+insert into nomina values(6,6,1,1,59,NULL);
+insert into nomina values(7,7,1,1,56,NULL);
+insert into nomina values(8,8,1,1,49,NULL);
+insert into nomina values(9,9,1,1,55,NULL);
+insert into nomina values(10,10,1,1,58,NULL);
+insert into nomina values(11,11,1,1,59,NULL);
+insert into nomina values(12,12,1,1,50,NULL);
+insert into nomina values(13,13,1,1,51,NULL);
+insert into nomina values(14,14,1,1,56,NULL);
+insert into nomina values(15,15,1,1,58,NULL);
+insert into nomina values(16,16,1,1,56,NULL);
+insert into nomina values(17,17,2,1,49,NULL);
+insert into nomina values(18,18,1,1,48,NULL);
+insert into nomina values(19,19,1,1,57,NULL);
+insert into nomina values(20,20,1,1,51,NULL);
+insert into nomina values(21,21,1,1,59,NULL);
+insert into nomina values(22,22,1,1,58,NULL);
+insert into nomina values(23,23,2,1,52,NULL);
+insert into nomina values(24,24,1,1,49,NULL);
+insert into nomina values(25,25,1,1,55,NULL);
+insert into nomina values(26,26,1,1,56,NULL);
+insert into nomina values(27,27,1,1,54,NULL);
+insert into nomina values(28,28,1,1,55,NULL);
+insert into nomina values(29,29,1,1,54,NULL);
+insert into nomina values(30,30,1,1,55,NULL);
+insert into nomina values(31,31,1,1,56,NULL);
+insert into nomina values(32,32,1,1,56,NULL);
+insert into nomina values(33,33,1,1,54,NULL);
+insert into nomina values(34,34,1,1,52,NULL);
+insert into nomina values(35,35,1,1,55,NULL);
+insert into nomina values(36,36,2,1,54,NULL);
+insert into nomina values(37,37,1,1,60,NULL);
+insert into nomina values(38,38,2,1,56,NULL);
+insert into nomina values(39,39,1,1,58,NULL);
+insert into nomina values(40,40,1,1,49,NULL);
+insert into nomina values(41,41,1,1,50,NULL);
+insert into nomina values(42,42,1,1,53,NULL);
+insert into nomina values(43,43,1,1,52,NULL);
+insert into nomina values(44,44,1,1,58,NULL);
+insert into nomina values(45,45,3,1,56,NULL);
+insert into nomina values(46,46,1,1,57,NULL);
+insert into nomina values(47,47,NULL,1,51,NULL);
+insert into nomina values(48,48,NULL,1,53,NULL);
+insert into nomina values(49,49,NULL,1,50,NULL);
+insert into nomina values(50,50,NULL,1,58,NULL);
+insert into nomina values(51,1,1,2,51,NULL);
+insert into nomina values(52,2,2,2,60,NULL);
+insert into nomina values(53,3,1,2,49,NULL);
+insert into nomina values(54,4,1,2,50,NULL);
+insert into nomina values(55,5,1,2,53,NULL);
+insert into nomina values(56,6,1,2,60,NULL);
+insert into nomina values(57,7,1,2,50,NULL);
+insert into nomina values(58,8,1,2,54,NULL);
+insert into nomina values(59,9,1,2,59,NULL);
+insert into nomina values(60,10,1,2,55,NULL);
+insert into nomina values(61,11,1,2,55,NULL);
+insert into nomina values(62,12,1,2,54,NULL);
+insert into nomina values(63,13,1,2,54,NULL);
+insert into nomina values(64,14,1,2,48,NULL);
+insert into nomina values(65,15,1,2,60,NULL);
+insert into nomina values(66,16,1,2,59,NULL);
+insert into nomina values(67,17,2,2,51,NULL);
+insert into nomina values(68,18,1,2,56,NULL);
+insert into nomina values(69,19,1,2,48,NULL);
+insert into nomina values(70,20,1,2,48,NULL);
+insert into nomina values(71,21,1,2,53,NULL);
+insert into nomina values(72,22,1,2,55,NULL);
+insert into nomina values(73,23,2,2,60,NULL);
+insert into nomina values(74,24,1,2,50,NULL);
+insert into nomina values(75,25,1,2,59,NULL);
+insert into nomina values(76,26,1,2,48,NULL);
+insert into nomina values(77,27,1,2,52,NULL);
+insert into nomina values(78,28,1,2,55,NULL);
+insert into nomina values(79,29,1,2,60,NULL);
+insert into nomina values(80,30,1,2,51,NULL);
 
+
+
+
+SELECT COUNT(*) FROM NOMINA;
 SELECT COUNT(*) FROM OBRA;
 SELECT COUNT(*) FROM MAQUINA;
 SELECT COUNT(*) FROM OBRERO;
 SELECT COUNT(*) FROM CLASIFICACION;
 SELECT COUNT(*) FROM ESTADOS;
-
-SELECT * FROM OBRERO;
-SELECT EXTRACT( MONTH FROM FECHA_INGRESO) MES FROM OBRERO;
-SELECT EXTRACT( DAY FROM FECHA_INGRESO) DIA FROM OBRERO;
-SELECT EXTRACT( YEAR FROM FECHA_INGRESO) AÑO FROM OBRERO;
-
-
-SELECT FECHA_INGRESO, EXTRACT( MONTH FROM FECHA_INGRESO) MES, EXTRACT( DAY FROM FECHA_INGRESO) DIA , EXTRACT( YEAR FROM FECHA_INGRESO) AÑO 
-FROM OBRERO;
-
-
-SELECT FECHA_INGRESO FROM OBRERO;
 
